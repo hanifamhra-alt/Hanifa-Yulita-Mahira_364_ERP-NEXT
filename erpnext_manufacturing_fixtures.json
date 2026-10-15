@@ -1,0 +1,308 @@
+{
+  "company": "PT TechnoFab Manufaktur Indonesia",
+  "abbr": "PTF",
+  "currency": "IDR",
+  "warehouses": [
+    {
+      "name": "Stores - PTF",
+      "type": "Stores"
+    },
+    {
+      "name": "Work in Progress - PTF",
+      "type": "WIP"
+    },
+    {
+      "name": "Finished Goods - PTF",
+      "type": "Finished Goods"
+    }
+  ],
+  "items": [
+    {
+      "code": "RM-PCB-001",
+      "name": "PCB Assembly Control Board",
+      "group": "Raw Material",
+      "uom": "Nos",
+      "standard_rate": 300000
+    },
+    {
+      "code": "RM-ALU-002",
+      "name": "Aluminium Casing Enclosure",
+      "group": "Raw Material",
+      "uom": "Nos",
+      "standard_rate": 150000
+    },
+    {
+      "code": "RM-TRF-003",
+      "name": "Copper Transformer 1kVA",
+      "group": "Raw Material",
+      "uom": "Nos",
+      "standard_rate": 450000
+    },
+    {
+      "code": "RM-FET-004",
+      "name": "Power MOSFET Set",
+      "group": "Raw Material",
+      "uom": "Nos",
+      "standard_rate": 25000
+    },
+    {
+      "code": "FG-INV-1000",
+      "name": "Solar Power Inverter 1000W",
+      "group": "Products",
+      "uom": "Nos",
+      "standard_rate": 2000000
+    }
+  ],
+  "bom": {
+    "item_code": "FG-INV-1000",
+    "quantity": 1,
+    "items": [
+      {
+        "item_code": "RM-PCB-001",
+        "qty": 1,
+        "rate": 300000
+      },
+      {
+        "item_code": "RM-ALU-002",
+        "qty": 1,
+        "rate": 150000
+      },
+      {
+        "item_code": "RM-TRF-003",
+        "qty": 1,
+        "rate": 450000
+      },
+      {
+        "item_code": "RM-FET-004",
+        "qty": 4,
+        "rate": 25000
+      }
+    ],
+    "operating_cost": 150000,
+    "overhead_cost": 100000
+  },
+  "transactions": [
+    {
+      "step": 1,
+      "code": "TX-001",
+      "title": "Setoran Modal Awal Disetor",
+      "doctype": "Journal Entry",
+      "description": "Penerimaan kas setoran modal awal dari pemegang saham.",
+      "entries": [
+        {
+          "account": "11110 - Kas Operasional Pabrik - PTF",
+          "debit": 100000000,
+          "credit": 0
+        },
+        {
+          "account": "31100 - Modal Disetor - PTF",
+          "debit": 0,
+          "credit": 100000000
+        }
+      ]
+    },
+    {
+      "step": 2,
+      "code": "TX-002",
+      "title": "Pembelian Bahan Baku (Purchase Order & Purchase Invoice)",
+      "doctype": "Purchase Invoice",
+      "supplier": "PT Komponen Utama Pemasok",
+      "description": "Pembelian 10 set bahan baku lengkap dengan PPN Masukan 11%.",
+      "items": [
+        {
+          "item_code": "RM-PCB-001",
+          "qty": 10,
+          "rate": 300000,
+          "amount": 3000000
+        },
+        {
+          "item_code": "RM-ALU-002",
+          "qty": 10,
+          "rate": 150000,
+          "amount": 1500000
+        },
+        {
+          "item_code": "RM-TRF-003",
+          "qty": 10,
+          "rate": 450000,
+          "amount": 4500000
+        },
+        {
+          "item_code": "RM-FET-004",
+          "qty": 40,
+          "rate": 25000,
+          "amount": 1000000
+        }
+      ],
+      "tax": {
+        "account": "11410 - PPN Masukan - PTF",
+        "rate": 11,
+        "amount": 1100000
+      },
+      "total_payable": 11100000,
+      "entries": [
+        {
+          "account": "11310 - Persediaan Bahan Baku - PTF",
+          "debit": 10000000,
+          "credit": 0
+        },
+        {
+          "account": "11410 - PPN Masukan - PTF",
+          "debit": 1100000,
+          "credit": 0
+        },
+        {
+          "account": "21110 - Utang Dagang Pemasok - PTF",
+          "debit": 0,
+          "credit": 11100000
+        }
+      ]
+    },
+    {
+      "step": 3,
+      "code": "TX-003",
+      "title": "Transfer Bahan Baku ke WIP (Stock Entry: Material Transfer)",
+      "doctype": "Stock Entry",
+      "purpose": "Material Transfer for Manufacture",
+      "from_warehouse": "Stores - PTF",
+      "to_warehouse": "Work in Progress - PTF",
+      "description": "Pengeluaran 10 set bahan baku dari gudang ke lantai produksi.",
+      "entries": [
+        {
+          "account": "11330 - Persediaan Work-in-Progress (WIP) - PTF",
+          "debit": 10000000,
+          "credit": 0
+        },
+        {
+          "account": "11310 - Persediaan Bahan Baku - PTF",
+          "debit": 0,
+          "credit": 10000000
+        }
+      ]
+    },
+    {
+      "step": 4,
+      "code": "TX-004",
+      "title": "Proses Produksi & Pengakuan Cost (Stock Entry: Manufacture)",
+      "doctype": "Stock Entry",
+      "purpose": "Manufacture",
+      "work_order": "WO-2026-00001",
+      "finished_good": "FG-INV-1000",
+      "produced_qty": 10,
+      "additional_costs": [
+        {
+          "account": "52100 - Alokasi BTKL - PTF",
+          "amount": 1500000,
+          "label": "Direct Labor (BTKL)"
+        },
+        {
+          "account": "53100 - Alokasi BOP - PTF",
+          "amount": 1000000,
+          "label": "Overhead Pabrik (BOP)"
+        }
+      ],
+      "description": "Penyelesaian 10 unit Solar Inverter 1000W ke gudang barang jadi.",
+      "entries": [
+        {
+          "account": "11340 - Persediaan Barang Jadi - PTF",
+          "debit": 12500000,
+          "credit": 0
+        },
+        {
+          "account": "11330 - Persediaan Work-in-Progress (WIP) - PTF",
+          "debit": 0,
+          "credit": 10000000
+        },
+        {
+          "account": "52100 - Alokasi Biaya Tenaga Kerja Langsung - PTF",
+          "debit": 0,
+          "credit": 1500000
+        },
+        {
+          "account": "53100 - Alokasi Biaya Overhead Pabrik - PTF",
+          "debit": 0,
+          "credit": 1000000
+        }
+      ]
+    },
+    {
+      "step": 5,
+      "code": "TX-005",
+      "title": "Penjualan & Pengiriman Barang (Sales Order & Sales Invoice)",
+      "doctype": "Sales Invoice",
+      "customer": "PT Surya Energi Indonesia",
+      "description": "Penjualan 8 unit Solar Inverter @ Rp 2.000.000 + PPN Keluaran 11%.",
+      "items": [
+        {
+          "item_code": "FG-INV-1000",
+          "qty": 8,
+          "rate": 2000000,
+          "amount": 16000000,
+          "cogs_rate": 1250000
+        }
+      ],
+      "tax": {
+        "account": "21210 - PPN Keluaran - PTF",
+        "rate": 11,
+        "amount": 1760000
+      },
+      "total_receivable": 17760000,
+      "entries": [
+        {
+          "account": "11210 - Piutang Dagang Pelanggan - PTF",
+          "debit": 17760000,
+          "credit": 0
+        },
+        {
+          "account": "41100 - Penjualan Barang Jadi - PTF",
+          "debit": 0,
+          "credit": 16000000
+        },
+        {
+          "account": "21210 - PPN Keluaran - PTF",
+          "debit": 0,
+          "credit": 1760000
+        },
+        {
+          "account": "51100 - HPP Barang Jadi - PTF",
+          "debit": 10000000,
+          "credit": 0
+        },
+        {
+          "account": "11340 - Persediaan Barang Jadi - PTF",
+          "debit": 0,
+          "credit": 10000000
+        }
+      ]
+    },
+    {
+      "step": 6,
+      "code": "TX-006",
+      "title": "Penerimaan Pelunasan Piutang & Pembayaran Utang Pemasok",
+      "doctype": "Payment Entry",
+      "description": "Penerimaan pembayaran dari pelanggan dan pelunasan tagihan ke pemasok.",
+      "entries": [
+        {
+          "account": "11120 - Bank Mandiri Operasional - PTF",
+          "debit": 17760000,
+          "credit": 0
+        },
+        {
+          "account": "11210 - Piutang Dagang Pelanggan - PTF",
+          "debit": 0,
+          "credit": 17760000
+        },
+        {
+          "account": "21110 - Utang Dagang Pemasok - PTF",
+          "debit": 11100000,
+          "credit": 0
+        },
+        {
+          "account": "11120 - Bank Mandiri Operasional - PTF",
+          "debit": 0,
+          "credit": 11100000
+        }
+      ]
+    }
+  ]
+}
